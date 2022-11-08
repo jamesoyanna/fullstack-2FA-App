@@ -9,6 +9,25 @@ const Signup = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const postSignUpDetails = () => {
+      fetch("http://localhost:4000/api/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+          tel,
+          username,
+        }),
+        headers: {"Content-Type": "application/json"}
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+      })
+      .catch((err) => console.error(err));
+    }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log({email, username, tel, password});

@@ -17,7 +17,7 @@ app.post("/api/register", (req, res) => {
     const {email, password, tel, username} = req.body;
     console.log({email, password, tel, username});
 
-    const user = [];
+    const users = [];
     const generateID = () => Math.random().toString(36).substring(2, 10);
     //  check if there is an existing user with the same email or password
     let result = users.filter((user) => user.email === email || user.tel === tel)
@@ -27,7 +27,7 @@ app.post("/api/register", (req, res) => {
         const newUser = {id:generateID(), email, password, username, tel}
         users.push(newUser);
         // return a message
-        return res,json({
+        return res.json({
             message: "Account created successfully",
         })
     }

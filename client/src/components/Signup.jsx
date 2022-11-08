@@ -22,7 +22,12 @@ const Signup = () => {
       })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+       if(data.error_message){
+        alert(data.error_message)
+       } else {
+        alert(data.message)
+        navigate("/");
+       }
       })
       .catch((err) => console.error(err));
     }
@@ -30,7 +35,7 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({email, username, tel, password});
+        postSignUpDetails()
         setEmail("");
         setPassword("");
         setTel("");

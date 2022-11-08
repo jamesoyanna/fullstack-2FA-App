@@ -7,9 +7,29 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    const postLoginDetails = () => {
+        fetch("http://localhost:3000/api/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+           
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data)
+        })
+        .catch((err) => console.error(err))
+    }
+
      const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({email, password})
+       // call the fucntion
+       postLoginDetails();
         setPassword("");
         setEmail("");
      }

@@ -37,7 +37,26 @@ app.post("/api/register", (req, res) => {
          })
 })
 
-
+// Login route
+app.post("/api/login", (req, res) => {
+    // Accept users credentials
+    const {email, password} = req.body;
+    // Check for users with the same email and password
+    let result = users.filter((user) => user.email === email && user.password === password)
+    // If no user exists , it returns an error message
+    if(result.lenghth !== 1){
+    return res.json({
+        error_message: "Incorrect credentials",
+    })
+    }
+    // Retruns username of the user after a succesful login
+     res.json({
+        message: "Login succesfully",
+        data: {
+            username: result[0].username,
+        }
+     })
+})
 
 
 

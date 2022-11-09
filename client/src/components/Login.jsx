@@ -21,7 +21,15 @@ const Login = () => {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data)
+            if(data.error_message){
+                alert(data.error_message)
+            } else {
+                console.log(data.data)
+                // save the username to localStorage
+                localStorage.setItem("username")
+                // Navigate to 2FA
+                navigate("/phone/verify")
+            }
         })
         .catch((err) => console.error(err))
     }

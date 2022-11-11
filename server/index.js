@@ -3,20 +3,23 @@ const cors = require('cors');
 const app  = express();
 const PORT  = 4000;
 
+const {Novu} = require("@novu/node");
+const novu = new Novu("27ee846338d4661c39c58a6b42e59df1");
+
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
+const users = [];
+let code;
 
-const {Novu} = require("@novu/node");
-const novu = new Novu("27ee846338d4661c39c58a6b42e59df1");
 
 //👇🏻 Generates the code to be sent via SMS
 const generateCode = () => Math.random().toString(36).substring(2, 12);
 
 const sendNovuNotification = async (recipient, verificationCode) => {
     try {
-        let response = await novu.trigger("<NOTIFICATION_TEMPLATE_ID>", {
+        let response = await novu.trigger("sendsms", {
             to: {
                 subscriberId: recipient,
                 phone: recipient,
@@ -32,9 +35,9 @@ const sendNovuNotification = async (recipient, verificationCode) => {
 };
 
 
-app.get('/', (req, res) =>{
-    res.json({message: "Hello World"})
-})
+// app.get('/', (req, res) =>{
+//     res.json({message: "Hello World"})
+// })
 
 
 app.post("/api/register", (req, res) => {
@@ -42,7 +45,6 @@ app.post("/api/register", (req, res) => {
     const {email, password, tel, username} = req.body;
     console.log({email, password, tel, username});
 
-    const users = [];
     const generateID = () => Math.random().toString(36).substring(2, 10);
     //  check if there is an existing user with the same email or password
     let result = users.filter((user) => user.email === email || user.tel === tel)
@@ -69,7 +71,7 @@ app.post("/api/login", (req, res) => {
     // Check for users with the same email and password
     let result = users.filter((user) => user.email === email && user.password === password)
     // If no user exists , it returns an error message
-    if(result.lenghth !== 1){
+    if(result.length !== 1){
     return res.json({
         error_message: "Incorrect credentials",
     })
@@ -85,6 +87,17 @@ app.post("/api/login", (req, res) => {
         }
      })
 })
+
+// Route to accept code and check if it is the same as the code from the backend
+app.post("/api.verification", (req, res) => {
+    if(code === req.body.code){
+        return res.json({
+            message: "You're verified successfully"});
+    }
+    res.json({
+        error_message: "Incorrect credentials"
+    })
+});
 
 
 

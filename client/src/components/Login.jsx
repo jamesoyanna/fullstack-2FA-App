@@ -8,7 +8,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const postLoginDetails = () => {
-        fetch("http://localhost:3000/api/login", {
+        fetch("http://localhost:4000/api/login", {
             method: "POST",
             body: JSON.stringify({
                 email,
@@ -26,7 +26,7 @@ const Login = () => {
             } else {
                 console.log(data.data)
                 // save the username to localStorage
-                localStorage.setItem("username")
+                localStorage.setItem("username", data.data.username);
                 // Navigate to 2FA
                 navigate("/phone/verify")
             }
@@ -65,7 +65,7 @@ const Login = () => {
     minLength={8}
     required
     value={password}
- onChange={(e) => setPassword(e.target.password)}
+ onChange={(e) => setPassword(e.target.value)}
     />
     <button className='loginBtn'>SIGN IN</button>
     <p>

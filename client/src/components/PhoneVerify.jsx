@@ -6,9 +6,34 @@ const PhoneVerify = () => {
   const [code, setCode] = useState("");
   const navigate = useNavigate();
 
+
+  const postVerification = async () => {
+    fetch("http://localhost:4000/api/verification", {
+      method: "POST",
+      body:JSON.stringify({
+       code, 
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if(data.error_message){
+        alert(data.error_message)
+      } else {
+        // Navigate to the dashboard page
+        navigate("/dashboard")
+      }
+    })
+    .catch((err) => console.error(err));
+  }
+
   const handleSubmit = (e) => {
     e.preventDefualt();
-    console.log({code})
+    // Call the function
+   postVerification();
     setCode("")
     navigate("/dashboard")
   }

@@ -7,6 +7,31 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
+
+const {Novu} = require("@novu/node");
+const novu = new Novu("27ee846338d4661c39c58a6b42e59df1");
+
+//👇🏻 Generates the code to be sent via SMS
+const generateCode = () => Math.random().toString(36).substring(2, 12);
+
+const sendNovuNotification = async (recipient, verificationCode) => {
+    try {
+        let response = await novu.trigger("<NOTIFICATION_TEMPLATE_ID>", {
+            to: {
+                subscriberId: recipient,
+                phone: recipient,
+            },
+            payload: {
+                code: verificationCode,
+            },
+        });
+        console.log(response);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+
 app.get('/', (req, res) =>{
     res.json({message: "Hello World"})
 })
@@ -49,6 +74,9 @@ app.post("/api/login", (req, res) => {
         error_message: "Incorrect credentials",
     })
     }
+    code = generateCode();
+    // Send the SMS via Novu
+    sendNovuNotification(result[0].tel, code)
     // Retruns username of the user after a succesful login
      res.json({
         message: "Login succesfully",
